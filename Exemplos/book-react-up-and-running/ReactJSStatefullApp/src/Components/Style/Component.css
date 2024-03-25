@@ -1,0 +1,16 @@
+.allTable {
+  border: 2px solid #000;
+  border-collapse: collapse;
+}
+
+.inputClass[type="text"] {
+    width: 100%; /* Faz o input ocupar toda a largura da célula */
+    box-sizing: border-box; /* Inclui o padding e a borda no cálculo da largura */
+    margin: 0; /* Garante que não haja margem externa afetando o layout */
+    /* Ajuste o padding do input conforme necessário */
+    /* Ajuste a borda do input conforme necessário */
+}
+
+.tdClass {
+    width: 120px;
+}

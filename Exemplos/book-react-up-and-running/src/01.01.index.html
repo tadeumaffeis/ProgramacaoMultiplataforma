@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>01.01.index.html</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+    <script src="../react/react.js"></script>
+    <script src="../react/react-dom.js"></script>
+    <script src="../react/babel.js"></script>
+    <script src="./SpanComponent.js" type="text/babel"></script>
+    <script type="text/babel">
+        class MySpanComponent extends React.Component {
+            render() {
+                return (
+                    <span>My name is <em>{this.props.name}</em>,
+                        the {this.props.job}</span>
+                );
+            }
+        }
+
+        MySpanComponent.defaultProps = {
+            name: 'default',
+            job: 'engineer',
+        };
+
+        class TextAreaCounter extends React.Component {
+            constructor() {
+                super();
+                this.state = {};
+            }
+
+            onTextChange(event) {
+                this.setState({
+                    text: event.target.value,
+                });
+                this.setState({
+                    style:
+                    {
+                        color: event.target.value.length > 10 ? 'black' : 'red'
+                    },
+                });
+            }
+
+            onMouseOver(event) {
+                this.setState({
+                    style:
+                    {
+                        border: '1pt solid red',
+                        color: event.target.value.length > 10 ? 'black' : 'red'
+                    },
+                });
+                console.log(event.target.value.length);
+                console.log(this.state.style);
+            }
+
+            onMouseOut(event) {
+                this.setState({
+                    style:
+                    {
+                        border: '1pt solid black',
+                        color: event.target.value.length > 10 ? 'black' : 'red'
+                    },
+                });
+                console.log(event.target.value.length);
+                console.log(this.state.style);
+            }
+
+            render() {
+                const text = 'text' in this.state ? this.state.text : this.props.text;
+                const style = 'style' in this.state ? this.state.style : this.props.style;
+                return (
+                    <div>
+                        <textarea
+                            defaultValue={text}
+                            onChange={event => this.onTextChange(event)}
+                            onMouseOver={event => this.onMouseOver(event)}
+                            onMouseOut={event => this.onMouseOut(event)}
+                            style={style}
+                        />
+                        <h3>{text.length}</h3>
+                    </div>
+                );
+            }
+        }
+
+        TextAreaCounter.defaultProps = {
+            text: 'Count me as I type',
+            style: { color: 'black' },
+        };
+
+        ReactDOM.render(
+            <div>
+                <SpanComponent />
+                <TextAreaCounter />
+            </div >
+            ,
+            document.getElementById("app")
+        );
+
+    </script>
+</body>
+
+</html>

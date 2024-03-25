@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <script src='./react.js'></script>
+    <script src='./react-dom.js'></script>
+    <script src="./babel.js"></script>
+  </head>
+  <body>
+    <div id='app'></div>
+    <script type='text/babel'>
+       function FunctionSampleComponent({name})
+       {
+          return (
+             <h1 id='my-heading'> 
+                <i>{name}</i>
+             </h1>
+          );
+       }
+       class SampleComponent extends React.Component {
+          constructor() {
+             super();
+          }
+          render() {
+             this.name = this.props ? this.props.name : 'undefined'; 
+	     return <i>{this.name}</i>;
+          }
+       }
+       ReactDOM.render(
+          <h1 id='my-heading'>
+            <FunctionSampleComponent/> text
+          </h1>
+          ,
+	document.getElementById('app')
+       );
+    </script>
+  </body>
+</html>
+
+
