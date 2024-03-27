@@ -24,12 +24,11 @@ class PMTableHeader extends React.Component {
         this.state = {
             header: props.header,
         };
-        console.log('PMTableHeader --> ',  this.state);
     }
     render() {
         const headers = 'header' in this.state
-            ? this.state.header.map((header, index) => { return <th key={index}>{header}</th>; })
-            : this.props.header.map((header, index) => { return <th key={index}>{header}</th>; });
+            ? this.state.header.map((header, index) => { return <th key={index*20}>{header}</th>; })
+            : this.props.header.map((header, index) => { return <th key={index*20}>{header}</th>; });
         return (
             <thead>
                 {<tr>{headers}</tr>}
