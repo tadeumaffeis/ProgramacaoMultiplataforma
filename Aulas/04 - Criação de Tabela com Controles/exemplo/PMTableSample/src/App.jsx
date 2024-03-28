@@ -1,6 +1,6 @@
 
 import './App.css'
-import PMTableWithoutChildrenComponenets from './Components/PMTableWithoutChildrenComponenets'
+import PMTableWithoutChildrenComponenets from './Components/PMTableWithoutChildrenComponents'
 
 function App() {
   return (
