@@ -15,17 +15,13 @@
 // 27/03/2024 - Antonio Tadeu Maffeis - Criacao do componente
 // 
 //
-
 import React from 'react';
 import PropTypes from 'prop-types';
-import PMTableCaption from './PMTableCaption';
-import PMTableHeader from './PMTableHeader';
-import PMTableBody from './PMTableBody';
-
 export default class PMTable extends React.Component {
 
     constructor(props) {
         super();
+
         this.state = {
             caption: props.caption,
             header: props.header,
@@ -94,15 +90,31 @@ export default class PMTable extends React.Component {
             return title;
         });
 
-        const html_caption = new PMTableCaption({ text: caption }).render();
-        const html_headers = new PMTableHeader({ header: header }).render();
-        const html_body = new PMTableBody({ data: data }).render();
-
         return (
             <table onClick={this.onClick}>
-                {html_caption}
-                {html_headers}
-                {html_body}
+                <caption>{caption}</caption>
+                <thead>
+                    <tr>
+                        {header.map((title, idx) => {
+                            return <th key={idx}>{title}</th>;
+                        })}
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        data.map((row, idx) => {
+                            return (
+                                <tr key={idx}>
+                                    {row.map((cell, idx) => {
+                                        return <td key={idx}>{cell}</td>;
+                                    }
+                                    )}
+                                </tr>
+                            );
+                        }
+                        )
+                    }
+                </tbody>
             </table>
         );
     }
@@ -149,5 +161,15 @@ PMTable.defaultProps = {
                     </tbody>
             </table>
 
+            //const html_caption = new PMTableCaption({ text: caption }).render();
+            //const html_headers = new PMTableHeader({ header: header }).render();
+            //const html_body = new PMTableBody({ data: data }).render();
+
+
+            //<table onClick={this.onClick}>
+            //    {html_caption}
+            //    {html_headers}
+            //    {html_body}
+            //</table>
 
 */

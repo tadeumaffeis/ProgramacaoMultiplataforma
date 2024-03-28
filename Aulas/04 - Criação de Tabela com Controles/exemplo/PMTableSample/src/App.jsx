@@ -1,10 +1,10 @@
 
 import './App.css'
-import PMTable from './Components/PMTable'
+import PMTableWithoutChildrenComponenets from './Components/PMTableWithoutChildrenComponenets'
 
 function App() {
   return (
-      <PMTable
+      <PMTableWithoutChildrenComponenets
         caption='My Table Test'
         header={["Header 1", "Header 2", "Header 3"]}
         data={[["01", "02", "03"], ["11", "12", "13"],["21", "22", "23"],["31", "32", "33"]]}
