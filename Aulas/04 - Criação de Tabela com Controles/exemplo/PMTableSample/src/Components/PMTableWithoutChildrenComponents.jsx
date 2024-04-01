@@ -29,18 +29,57 @@ export default class PMTable extends React.Component {
             data: props.data,
             sortby: null,
             descending: false,
+            edit: {
+                row: -1,
+                column: -1,
+            },
         };
         this.onClick = this.onClick.bind(this);
         this.onDoubleClick = this.onDoubleClick.bind(this);
+        this. onSaveEdit = this. onSaveEdit.bind(this);
+        this.onResetTable = this.onResetTable.bind(this);
+    }
+
+     onSaveEdit(event) {
+        event.preventDefault();
+        const input = event.target.firstChild;
+        const data = Array.from(this.state.data);
+        data[this.state.edit.row][this.state.edit.column] = input.value;
+        this.setState({
+            data,
+            edit: null
+        });
+    }
+
+    onResetTable(event) {
+        const target = event.target;
+        if (target.tagName.toUpperCase() !== 'TD')
+        {
+            return
+        }
+        this.setState({
+            header: this.props.header,
+            data: this.props.data,
+            sortby: null,
+            descending: false,
+            edit: {
+                row: -1,
+                column: -1,
+            }
+        });
     }
 
     onDoubleClick = (event) => {
         if (event.target.tagName.toUpperCase() === 'TD') {
             this.setState({
-                header: this.props.header,
-                data: this.props.data,
-                sortby: null,
-                descending: false,
+                //header: this.props.header,
+                //data: this.props.data,
+                //sortby: null,
+                //descending: false,
+                edit: {
+                    row: parseInt(event.target.parentNode.dataset.row, 10),
+                    column: event.target.cellIndex,
+                }
             });
         }
     }
@@ -65,6 +104,10 @@ export default class PMTable extends React.Component {
             data,
             sortby: column,
             descending,
+            edit: {
+                row: -1,
+                column: -1,
+            }
         });
     }
 
@@ -79,24 +122,33 @@ export default class PMTable extends React.Component {
         });
 
         return (
-            <table onClick={this.onClick} onDoubleClick={this.onDoubleClick}>
+            <table >
                 <caption>{caption}</caption>
-                <thead>
+                <thead onClick={this.onClick}>
                     <tr>
                         {header.map((title, idx) => {
                             return <th key={idx}>{title}</th>;
                         })}
                     </tr>
                 </thead>
-                <tbody>
+                <tbody onDoubleClick={this.onDoubleClick}>
                     {
-                        data.map((row, idx) => {
+                        data.map((row, rowidx) => {
                             return (
-                                <tr key={idx}>
-                                    {row.map((cell, idx) => {
-                                        return <td key={idx}>{cell}</td>;
+                                <tr key={rowidx} data-row={rowidx}>
+                                    {
+                                        row.map((cell, columnidx) => {
+                                            const edit = this.state.edit;
+                                            if (edit && edit.row === rowidx && edit.column === columnidx) {
+                                                cell = (
+                                                    <form onSubmit={this. onSaveEdit}>
+                                                        <input type="text" defaultValue={cell} />
+                                                    </form>
+                                                );  
+                                            }
+                                            return <td onClick={this.onResetTable} key={columnidx}>{cell}</td>;
+                                        })
                                     }
-                                    )}
                                 </tr>
                             );
                         }
