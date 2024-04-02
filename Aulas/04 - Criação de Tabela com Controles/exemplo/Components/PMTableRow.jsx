@@ -16,11 +16,11 @@ class PMTableRow extends React.Component {
             <tr>
                 {
                     row.map((cell, index) => 
-                    {
+
                         return (
                             <PMTableCell key={index} cell={cell} />
                         );
-                    })
+)
                 }
             </tr>
         );

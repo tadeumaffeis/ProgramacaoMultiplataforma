@@ -42,14 +42,14 @@ class PMTableBody extends React.Component {
                             //        Object.keys(row).map((key, index) => {
                             //            return (
                             //                <td key={index}>
-                            //                    {row[key]}
+                            //row[key]}
                             //                </td>
                             //            );
                             //        })
                             //    }
                             //</tr>
                         );
-                    })
+)
                 }
             </tbody>
         );

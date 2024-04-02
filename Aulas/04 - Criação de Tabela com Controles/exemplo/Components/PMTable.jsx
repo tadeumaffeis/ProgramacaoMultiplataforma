@@ -126,22 +126,22 @@ PMTable.defaultProps = {
                 <caption>{caption}</caption>
                 <thead>
                     <tr>
-                        {header.map((title, idx) => {
+    header.map((title, idx) => {
                             return <th key={idx}>{title}</th>;
-                        })}
+    )}
                     </tr>
                     </thead>
                     <tbody>
-                        {this.state.data.map((row, idx) => {
+    this.state.data.map((row, idx) => {
                             return (
                                 <tr key={idx}>
-                                    {row.map((cell, idx) => {
+                row.map((cell, idx) => {
                                         return <td key={idx}>{cell}</td>;
-                                    }
+                
                                     )}
                                 </tr>
                             );
-                        }
+    
                         )}
                     </tbody>
             </table>
