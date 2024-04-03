@@ -43,11 +43,14 @@ export default class PMTable extends React.Component {
         const pHeader = props.header.map((title) => {
             return title;
         });
+        
         const pData = props.data.map((row) => {
             return row.map((cell) => {
                 return cell;
             })
         });
+
+        this.logState = Array.from([]);
 
         this.state = {
             capytion: pCaption,
@@ -65,6 +68,7 @@ export default class PMTable extends React.Component {
                 column: -1,
             },
         };
+
         this.onClick = this.onClick.bind(this);
         this.onDoubleClick = this.onDoubleClick.bind(this);
         this.onSaveEdit = this.onSaveEdit.bind(this);
@@ -152,6 +156,7 @@ export default class PMTable extends React.Component {
 
     onSearchSubmit = (event) => {
         event.preventDefault();
+        this.logState.push(this.state);
         const input = event.target.firstChild;
         const data = Array.from(this.state.data);
         const search = input.value.toLowerCase();
@@ -162,9 +167,12 @@ export default class PMTable extends React.Component {
     }
 
     onSearchOffClick = () => {
-        this.setState({
-            data: this.props.data,
-        });
+        if (this.logState.length > 0) {
+            this.setState(this.logState.pop());
+        }
+        //this.setState({
+        //    data: this.props.data,
+        //});
     }
 
     onClick = (event) => {
@@ -244,9 +252,9 @@ export default class PMTable extends React.Component {
                         result +
                         row.reduce((rowcontent, cellcontent, idx) => {
                             const cell = cellcontent.replace(/"/g, '""');
-                            const delimiter = idx < row.length - 1 ? ',' : '';
-                            return `${rowcontent}"${cell}"${delimiter}` + '\n'
-                        })
+                            const delimiter = idx < row.length ? ',' : '';
+                            return `"${cell}"${delimiter}`
+                        }) + '\n'
                     )
                 }, '');
         const URL = window.URL || window.webkitURL;
@@ -285,7 +293,7 @@ export default class PMTable extends React.Component {
         });
 
         return (
-            <table onKeyDown={this.onKeyEscPress}>
+            <table onKeyDown={this.onKeyEscPress} style={{ fontFamily: 'Arial, sans-serif', borderCollapse: 'collapse', border: '1pt solid lightgray' }}>
                 <caption onClick={this.onResetTable}
                     style={{ backgroundColor: 'lightsteelblue', fontSize: '20px', fontWeight: 'bold', color: 'blue', padding: '0.5em' }}>
                     {caption}
@@ -294,7 +302,7 @@ export default class PMTable extends React.Component {
                     <tr style={{ backgroundColor: 'lightgrey' }}>
                         {
                             header.map((title, idx) => {
-                                return <th key={idx}>{title}</th>;
+                                return <th key={idx} style={{ padding: '0.5em' }}>{title}</th>;
                             })
                         }
                     </tr>
@@ -318,7 +326,7 @@ export default class PMTable extends React.Component {
                                                 )
                                             }
                                             return <td key={columnidx}
-                                                style={{ textAlign: 'left' }}
+                                                style={{ textAlign: 'left', paddingLeft: '0.5em', paddingRight: '0.5em' }}
                                                 onDoubleClick={this.onDoubleClick}>
                                                 {cell}
                                             </td>
@@ -358,7 +366,7 @@ export default class PMTable extends React.Component {
                                         onMouseOver={this.onMouseOverIcon}
                                         onMouseOut={this.onMouseOutIcon}
                                         style={{ color: red[500] }}
-                                        titleAccess='Reset Search' />
+                                        titleAccess='Reset Last Search' />
                                 }
                             </div>
                             <div style={{ float: 'left', position: 'relative', paddingLeft: '2px' }}>
