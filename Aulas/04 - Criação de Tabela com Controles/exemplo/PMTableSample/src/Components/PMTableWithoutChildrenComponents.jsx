@@ -304,13 +304,13 @@ export default class PMTable extends React.Component {
                             }
                             {
                                 this.state.download &&
-                                <div style={{border: '1px solid black', fontSize: '9pt'}}>
-                                    <div>
+                                <div style={{border: '1px solid black', fontSize: '9pt', zIndx: 2}}>
+                                    <div style={{display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '4px'}}>
                                         <a href="data.json" onClick={this.onDownloadClickJSON}>
                                             Export JSON
                                         </a>
                                     </div>
-                                    <div>
+                                    <div  style={{display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '4px'}}>
                                         <a href="data.csv" onClick={this.onDownloadClickCSV}>
                                             Export CSV
                                         </a>
