@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /** 
  * Component PMTable
  *
@@ -20,13 +21,24 @@ import PropTypes from 'prop-types';
 import SearchIcon from '@mui/icons-material/Search';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import ClearIcon from '@mui/icons-material/Clear';
+import DownloadIcon from '@mui/icons-material/Download';
 import { red } from '@mui/material/colors';
+import Styled from 'styled-components';
 
+const MyDiv = Styled.div`
+    padding: 10px 20px;
+    background-color: white;
+    color: black;
+    border: none;
+    cursor: pointer;
+    &:hover {
+        background-color: lightgray;
+    }
+`;
 export default class PMTable extends React.Component {
 
     constructor(props) {
         super();
-        console.log(props);
         const pCaption = props.caption;
         const pHeader = props.header.map((title) => {
             return title;
@@ -62,6 +74,12 @@ export default class PMTable extends React.Component {
         this.onDownloadClickJSON = this.onDownloadClick.bind(this, 'json');
         this.onDownloadClickCSV = this.onDownloadClick.bind(this, 'csv');
         this.onMenuDownloadClick = this.onMenuDownloadClick.bind(this);
+        this.onMouseOverIcon = this.onMouseOverIcon.bind(this);
+        this.onMouseOutIcon = this.onMouseOutIcon.bind(this);
+        this.onMouseOutRow = this.onMouseOutRow.bind(this);
+        this.onMouseOverRow = this.onMouseOverRow.bind(this);
+        this.onKeyEscPress = this.onKeyEscPress.bind(this);
+        document.addEventListener('keydown', this.onKeyEscPress);
     }
 
     loadPropsToState(props) {
@@ -94,8 +112,7 @@ export default class PMTable extends React.Component {
         });
     }
 
-    onResetTable(event) {
-        console.log(event);
+    onResetTable() {
         //const target = event.target;
         //if (target.tagName.toUpperCase() !== 'TD') {
         //    return
@@ -154,6 +171,9 @@ export default class PMTable extends React.Component {
         const column = event.target.tagName.toUpperCase() === 'TH' ? event.target.cellIndex : -1;
         const data = Array.from(this.state.data);
         const descending = this.state.sortby === column && !this.state.descending;
+        if (column <= 0) {
+            return;
+        }
         data.sort((a, b) => {
             if (a[column] === b[column]) {
                 return 0;
@@ -176,6 +196,27 @@ export default class PMTable extends React.Component {
             }
         });
     }
+
+    onMouseOverIcon = (event) => {
+        const icon = event.target;
+        icon.style.border = '1px solid black';
+    }
+
+    onMouseOutIcon = (event) => {
+        const icon = event.target;
+        icon.style.border = 'none';
+    }
+
+    onMouseOverRow = (event) => {
+        const row = event.target.parentNode;
+        row.style.backgroundColor = 'lightgray';
+    }
+
+    onMouseOutRow = (event) => {
+        const row = event.target.parentNode;
+        row.style.backgroundColor = 'white';
+    }
+
 
     onDownloadClick = (format, ev) => {
         const data = Array.from(this.state.data).map(row => {
@@ -221,6 +262,18 @@ export default class PMTable extends React.Component {
         });
     }
 
+    onKeyEscPress = (event) => {
+        const key = event.key;
+        if (key === 'Escape') {
+            this.setState({
+                edit: null,
+                sortby: null,
+                descending: false,
+                download: false,
+            });
+        }
+    }
+
     render() {
         const caption = 'caption' in this.state ? this.state.caption : this.props.caption;
         const data = 'data' in this.state ? this.state.data : this.props.data;
@@ -232,10 +285,13 @@ export default class PMTable extends React.Component {
         });
 
         return (
-            <table >
-                <caption onClick={this.onResetTable}>{caption}</caption>
+            <table onKeyDown={this.onKeyEscPress}>
+                <caption onClick={this.onResetTable}
+                    style={{ backgroundColor: 'lightsteelblue', fontSize: '20px', fontWeight: 'bold', color: 'blue', padding: '0.5em' }}>
+                    {caption}
+                </caption>
                 <thead onClick={this.onClick}>
-                    <tr>
+                    <tr style={{ backgroundColor: 'lightgrey' }}>
                         {
                             header.map((title, idx) => {
                                 return <th key={idx}>{title}</th>;
@@ -243,11 +299,14 @@ export default class PMTable extends React.Component {
                         }
                     </tr>
                 </thead>
-                <tbody onDoubleClick={this.onDoubleClick}>
+                <tbody>
                     {
                         data.map((row, rowidx) => {
                             return (
-                                <tr key={rowidx} data-row={rowidx}>
+                                <tr key={rowidx}
+                                    data-row={rowidx}
+                                    onMouseOver={this.onMouseOverRow}
+                                    onMouseOut={this.onMouseOutRow}>
                                     {
                                         row.map((cell, columnidx) => {
                                             const edit = this.state.edit;
@@ -258,7 +317,11 @@ export default class PMTable extends React.Component {
                                                     </form>
                                                 )
                                             }
-                                            return <td key={columnidx}>{cell}</td>
+                                            return <td key={columnidx}
+                                                style={{ textAlign: 'left' }}
+                                                onDoubleClick={this.onDoubleClick}>
+                                                {cell}
+                                            </td>
                                         })
                                     }
                                 </tr>
@@ -266,66 +329,68 @@ export default class PMTable extends React.Component {
                         })
                     }
                 </tbody>
-                <tfoot>
+                <tfoot style={{ backgroundColor: 'lightsteelblue' }}>
                     <tr>
-                        <td>
-                            <ClearIcon onClick={this.onResetTable} style={{ color: red[500] }} titleAccess='Reset Table' />
-                            <SearchIcon onClick={this.onSearchClick} titleAccess='Search On/Off' />
-                            {
-                                this.state.search &&
-                                <SearchOffIcon onClick={this.onSearchOffClick} style={{ color: red[500] }} titleAccess='Reset Search' />
-                            }
-                        </td>
-                        <td>
-                            {
-                                this.state.search &&
-                                <form onSubmit={this.onSearchSubmit}>
-                                    <input type="text" placeholder='search string' />
-                                </form>
-                            }
+                        <td colSpan="7" style={{ padding: '5pt' }}>
+                            <div style={{ float: 'left', position: 'relative' }}>
+                                <DownloadIcon
+                                    onClick={this.onMenuDownloadClick}
+                                    onMouseOver={this.onMouseOverIcon}
+                                    onMouseOut={this.onMouseOutIcon}
+                                    titleAccess='Download JSON/CSV'
+
+                                />
+                                <ClearIcon
+                                    onClick={this.onResetTable}
+                                    onMouseOver={this.onMouseOverIcon}
+                                    onMouseOut={this.onMouseOutIcon}
+                                    style={{ color: red[500] }}
+                                    titleAccess='Reset Table' />
+                                <SearchIcon
+                                    onClick={this.onSearchClick}
+                                    onMouseOver={this.onMouseOverIcon}
+                                    onMouseOut={this.onMouseOutIcon}
+                                    titleAccess='Search On/Off' />
+                                {
+                                    this.state.search &&
+                                    <SearchOffIcon
+                                        onClick={this.onSearchOffClick}
+                                        onMouseOver={this.onMouseOverIcon}
+                                        onMouseOut={this.onMouseOutIcon}
+                                        style={{ color: red[500] }}
+                                        titleAccess='Reset Search' />
+                                }
+                            </div>
+                            <div style={{ float: 'left', position: 'relative', paddingLeft: '2px' }}>
+                                {
+                                    this.state.search &&
+                                    <form onSubmit={this.onSearchSubmit}>
+                                        <input type="text" placeholder='search string' />
+                                    </form>
+                                }
+                            </div>
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td colSpan="7" style={{ backgroundColor: '#ffffff' }}>
                             {
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    width="2em"
-                                    height="2em"
-                                    viewBox="0 0 24 24"
-                                    onClick={this.onMenuDownloadClick}>
-                                    <path fill="none"
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M12 5v8.5m0 0l3-3m-3 3l-3-3M5 15v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2">
-                                    </path>
-                                </svg>
-                            }
-                            {
-                                this.state.download &&
-                                <div style={{border: '1px solid black', fontSize: '9pt', zIndx: 2}}>
-                                    <div style={{display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '4px'}}>
+                                this.state.download
+                                &&
+                                <div style={{ border: '1px solid black', fontSize: '9pt', position: 'absolute', zIndex: 2 }}>
+                                    <MyDiv style={{ display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '1px' }}>
                                         <a href="data.json" onClick={this.onDownloadClickJSON}>
                                             Export JSON
                                         </a>
-                                    </div>
-                                    <div  style={{display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '4px'}}>
+                                    </MyDiv>
+                                    <MyDiv style={{ display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '1px' }}>
                                         <a href="data.csv" onClick={this.onDownloadClickCSV}>
                                             Export CSV
                                         </a>
-                                    </div>
+                                    </MyDiv>
                                 </div>
-
                             }
                         </td>
-                        <td colSpan={data.length - 1}>
-
-                        </td>
-                        <td>
-                        </td>
                     </tr>
-
                 </tfoot>
             </table >
         );
@@ -424,4 +489,17 @@ PMTable.defaultProps = {
                                             return <td key={columnidx}>{cell}</td>;
                                         </tr>
                                 </>
+                                                          <svg xmlns="http://www.w3.org/2000/svg"
+                                width="1.5em"
+                                height="1.5em"
+                                viewBox="0 0 24 24"
+                                onClick={this.onMenuDownloadClick}>
+                                <path fill="none"
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 5v8.5m0 0l3-3m-3 3l-3-3M5 15v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2">
+                                </path>
+                            </svg>
 */
