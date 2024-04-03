@@ -14,7 +14,10 @@
  *
  * History
  * 27/03/2024 - Antonio Tadeu Maffeis - Criacao do componente
- * 
+ * 01/04/2024 - Antonio Tadeu Maffeis - Adicao de funcionalidades de edicao, ordenacao, busca e download
+ * 02/04/2024 - Antonio Tadeu Maffeis - Adicao de funcionalidade de reset da tabela e filtragem de dados
+ * 03/04/2024 - Antonio Tadeu Maffeis - Adicao de funcionalidade de download de dados em JSON e CSV
+ * 03/04/2024 - Antonio Tadeu Maffeis - Adicao de funcionalidade de redo da ultima filtragem
  */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -36,14 +39,20 @@ const MyDiv = Styled.div`
     }
 `;
 export default class PMTable extends React.Component {
-
+    /**
+     * Construtor da classe PMTable
+     * @param {pops} props O array contendo os argumentos passados para o construtor.
+     * @param {array} props.caption O array contendo a legenda da tabela.
+     * @param {array} props.header O array contendo o cabecalho das colunas da tabela.
+     * @param {array} props.data O array contendo os dados da tabela (linhas e colunas).
+     */
     constructor(props) {
         super();
         const pCaption = props.caption;
         const pHeader = props.header.map((title) => {
             return title;
         });
-        
+
         const pData = props.data.map((row) => {
             return row.map((cell) => {
                 return cell;
@@ -53,12 +62,9 @@ export default class PMTable extends React.Component {
         this.logState = Array.from([]);
 
         this.state = {
-            capytion: pCaption,
+            caption: pCaption,
             header: pHeader,
             data: pData,
-            //caption: props.caption,
-            //header: props.header,
-            //data: props.data,
             search: true,
             sortby: null,
             descending: false,
@@ -86,25 +92,6 @@ export default class PMTable extends React.Component {
         document.addEventListener('keydown', this.onKeyEscPress);
     }
 
-    loadPropsToState(props) {
-        const caption = props.caption.text;
-        const header = props.header.content.map((title) => {
-            return title;
-        });
-
-        const data = props.data.content.map((row) => {
-            return row.content.map((cell) => {
-                return cell;
-            })
-        });
-
-        this.setState({
-            caption,
-            header,
-            data,
-        });
-    }
-
     onSaveEdit(event) {
         event.preventDefault();
         const input = event.target.firstChild;
@@ -117,10 +104,6 @@ export default class PMTable extends React.Component {
     }
 
     onResetTable() {
-        //const target = event.target;
-        //if (target.tagName.toUpperCase() !== 'TD') {
-        //    return
-        //}
         this.setState({
             header: this.props.header,
             data: this.props.data,
@@ -136,10 +119,6 @@ export default class PMTable extends React.Component {
     onDoubleClick = (event) => {
         if (event.target.tagName.toUpperCase() === 'TD') {
             this.setState({
-                //header: this.props.header,
-                //data: this.props.data,
-                //sortby: null,
-                //descending: false,
                 edit: {
                     row: parseInt(event.target.parentNode.dataset.row, 10),
                     column: event.target.cellIndex,
@@ -170,9 +149,6 @@ export default class PMTable extends React.Component {
         if (this.logState.length > 0) {
             this.setState(this.logState.pop());
         }
-        //this.setState({
-        //    data: this.props.data,
-        //});
     }
 
     onClick = (event) => {
@@ -228,7 +204,6 @@ export default class PMTable extends React.Component {
 
     onDownloadClick = (format, ev) => {
         const data = Array.from(this.state.data).map(row => {
-            //row.pop(); // drop the last column, the recordId
             return row;
         });
 
@@ -244,26 +219,27 @@ export default class PMTable extends React.Component {
                 :
                 ' ';
 
-        contents +=
-            format === 'json'
-                ? JSON.stringify(data, null, ' ')
-                : data.reduce((result, row) => {
-                    return (
-                        result +
-                        row.reduce((rowcontent, cellcontent, idx) => {
-                            const cell = cellcontent.replace(/"/g, '""');
-                            const delimiter = idx < row.length ? ',' : '';
-                            return `"${cell}"${delimiter}`
-                        }) + '\n'
-                    )
-                }, '');
+        if (format === 'json') {
+            // Formata como JSON
+            contents = JSON.stringify(data, null, ' ');
+        } else {
+            // Formata como CSV (ou um formato similar de texto plano)
+            contents += data.map(row => {
+                return Object.keys(row).map(key => {
+                    // Coloca aspas em volta dos valores de string
+                    const value = row[key];
+                    return typeof value === 'string' ? `"${value}"` : value;
+                }).join(','); // Separa os valores por vírgula
+            }).join('\n'); // Separa as linhas por quebra de linha
+        }
+
         const URL = window.URL || window.webkitURL;
         const blob = new Blob([contents], { type: 'text/' + format });
         ev.target.href = URL.createObjectURL(blob);
         ev.target.download = 'data.' + format;
     }
 
-    onMenuDownloadClick = () => {
+    onMenuDownloadClick = (event) => {
         event.preventDefault();
         this.setState({
             download: this.state.download ? false : true,
@@ -293,7 +269,8 @@ export default class PMTable extends React.Component {
         });
 
         return (
-            <table onKeyDown={this.onKeyEscPress} style={{ fontFamily: 'Arial, sans-serif', borderCollapse: 'collapse', border: '1pt solid lightgray' }}>
+            <table onKeyDown={this.onKeyEscPress}
+                style={{ fontFamily: 'Arial, sans-serif', borderCollapse: 'collapse', border: '1pt solid lightgray' }}>
                 <caption onClick={this.onResetTable}
                     style={{ backgroundColor: 'lightsteelblue', fontSize: '20px', fontWeight: 'bold', color: 'blue', padding: '0.5em' }}>
                     {caption}
