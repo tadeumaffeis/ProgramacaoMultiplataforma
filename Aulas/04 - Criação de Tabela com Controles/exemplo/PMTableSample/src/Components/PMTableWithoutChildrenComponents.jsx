@@ -11,6 +11,8 @@
  * Description: Componente que exibe uma tabela com os dados de um array de objetos
  *
  * Dependency: prop-types (npm install prop-types)
+ *             styled-components (npm install styled-components)
+ *             material-ui (npm install @mui/material @emotion/react @emotion/styled)
  *
  * History
  * 27/03/2024 - Antonio Tadeu Maffeis - Criacao do componente
