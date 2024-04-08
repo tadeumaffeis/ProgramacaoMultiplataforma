@@ -1,95 +1,18 @@
-ABRAAO DE OLIVEIRA HORACIO		abraao.horacio@etec.sp.gov.br	
-ABRAAO DE OLIVEIRA HORACIO		abraao.horacio@fatec.sp.gov.br	
-ANA MARIA RODRIGUES			ana.rodrigues438@etec.sp.gov.br	
-ANA MARIA RODRIGUES			ana.rodrigues71@fatec.sp.gov.br	
-CARLOS EDUARDO DE SOUZA SOARES DA ROSA	selmagsouza@hotmail.com	
-CARLOS EDUARDO DE SOUZA SOARES DA ROSA	carlos.rosa5@fatec.sp.gov.br	
-DAVI MATHEUS LIMA DE MENDONCA		davimatheus.mendonca@hotmail.com	
-DAVI MATHEUS LIMA DE MENDONCA		davi.mendonca01@fatec.sp.gov.br	
-EMILIO DOS SANTOS BUENO			emilio.bueno@etec.sp.gov.br	
-EMILIO DOS SANTOS BUENO			emilio.bueno@fatec.sp.gov.br	
-ERICK RUCKE SOUZA			erickrucke1@gmail.com	
-ERICK RUCKE SOUZA			erick.souza17@fatec.sp.gov.br	
-FELIPE ARAUJO CAMARGO			felipecamargo0907@gmail.com	
-FELIPE ARAUJO CAMARGO			felipe.camargo41@fatec.sp.gov.br	
-FELIPE AUGUSTO VERONEZZI SAVIOLI	felipe.savioli@etec.sp.gov.br	
-FELIPE AUGUSTO VERONEZZI SAVIOLI	felipe.savioli@fatec.sp.gov.br	
-GABRIEL CARVALHO DE OLIVEIRA		gabriel.oliveira974@etec.sp.gov.br	
-GABRIEL CARVALHO DE OLIVEIRA		gabriel.oliveira310@fatec.sp.gov.br	
-GUILHERME DE SOUZA RODRIGUES CORDEIRO	raposaverde111@gmail.com	
-GUILHERME DE SOUZA RODRIGUES CORDEIRO	guilherme.cordeiro4@fatec.sp.gov.br	
-IVAN SILVA DE LIRA			ivansilira@outlook.com	
-IVAN SILVA DE LIRA			ivan.lira@fatec.sp.gov.br	
-JOAO PEDRO CAETANO			joaopcaetano123@gmail.com	
-JOAO PEDRO CAETANO			joao.caetano6@fatec.sp.gov.br	
-JOSE MARCIO FERNANDES SOUSA		jm4536@outlook.com	
-JOSE MARCIO FERNANDES SOUSA		jose.sousa50@fatec.sp.gov.br	
-JULIO CESAR GONCALVES GRANZOTTI		jcgranzotti@gmail.com	
-JULIO CESAR GONCALVES GRANZOTTI		julio.granzotti@fatec.sp.gov.br	
-KAUE SIMAO DA SILVA			ritasimao.01@hotmail.com	
-KAUE SIMAO DA SILVA			kaue.silva20@fatec.sp.gov.br	
-LEONARDO PINHO VECINA			lfdvecina@gmail.com	
-LEONARDO PINHO VECINA			leonardo.vecina@fatec.sp.gov.br	
-LUIS HENRIQUE FELIX DAS GRACAS		luishenriquecorporativo@gmail.com	
-LUIS HENRIQUE FELIX DAS GRACAS		luis.gracas@fatec.sp.gov.br	
-MATHEUS MARQUES DA SILVA		matheusmarqsilva@gmail.com	
-MATHEUS MARQUES DA SILVA		matheus.silva524@fatec.sp.gov.br	
-NICOLAS DE OLIVEIRA VALLE		nicolasdeoliveiravalle@gmail.com	
-NICOLAS DE OLIVEIRA VALLE		nicolas.valle@fatec.sp.gov.br	
-PEDRO HENRIQUE CARDOSO PRIETO		pprieto677@gmail.com	
-PEDRO HENRIQUE CARDOSO PRIETO		pedro.prieto@fatec.sp.gov.br	
-VICTOR HENRIQUE EXNER PERINA		victor.exner37@gmail.com	
-VICTOR HENRIQUE EXNER PERINA		victor.perina@fatec.sp.gov.br	
-VINICIUS APARECIDO BRITO		batatao.br2@gmail.com	
-VINICIUS APARECIDO BRITO		vinicius.brito3@fatec.sp.gov.br	
-WALLACE VALDIVINO DA SILVA		wallace.valdivino10@gmail.com	
-WALLACE VALDIVINO DA SILVA		wallace.silva35@fatec.sp.gov.br	
-WILLIAM FERNANDES SILVA			willgsvs@hotmail.com	
-WILLIAM FERNANDES SILVA			william.silva156@fatec.sp.gov.br	
-FELIPE DIAS DA SILVEIRA			felipedias6725@gmail.com	
-FELIPE DIAS DA SILVEIRA			felipe.silveira6@fatec.sp.gov.br	
-VITTOR TRIGONE DIAS			vi.trigone@gmail.com	
-VITTOR TRIGONE DIAS			vittor.dias01@fatec.sp.gov.br	
-ANTONIO TADEU MAFFEIS		
-
-GABRIEL CARVALHO DE OLIVEIRA		gabriel.oliveira974@etec.sp.gov.br	
-GABRIEL CARVALHO DE OLIVEIRA		gabriel.oliveira310@fatec.sp.gov.br	
-GUILHERME DE SOUZA RODRIGUES CORDEIRO	raposaverde111@gmail.com	
-GUILHERME DE SOUZA RODRIGUES CORDEIRO	guilherme.cordeiro4@fatec.sp.gov.br	
-JULIO CESAR GONCALVES GRANZOTTI		jcgranzotti@gmail.com	
-JULIO CESAR GONCALVES GRANZOTTI		julio.granzotti@fatec.sp.gov.br	
-KAUE SIMAO DA SILVA			ritasimao.01@hotmail.com	
-KAUE SIMAO DA SILVA			kaue.silva20@fatec.sp.gov.br	
-LUCAS CAMARGO DE SOUZA			lucas.desouzaca730@gmail.com	
-LUCAS CAMARGO DE SOUZA			lucas.souza291@fatec.sp.gov.br	
-ANGELO FERRAZ MODANEZ			angelomodanez30@gmail.com	
-ANGELO FERRAZ MODANEZ			angelo.modanez@fatec.sp.gov.br	
-CAUA GRANCHELLI VALLADAO		cauagran@gmail.com	
-CAUA GRANCHELLI VALLADAO		caua.valladao@fatec.sp.gov.br	
-FELIPE HENRIQUE GARCIA			deboraprado02@gmail.com	
-FELIPE HENRIQUE GARCIA			felipe.garcia45@fatec.sp.gov.br	
-GUSTAVO DA SILVA ANDRELO		andrelog56@gmail.com	
-GUSTAVO DA SILVA ANDRELO		gustavo.andrelo@fatec.sp.gov.br	
-JOAO OTAVIO FREIRES DA SILVA		rinaldo.diego@gmail.com	
-JOAO OTAVIO FREIRES DA SILVA		joao.silva820@fatec.sp.gov.br	
-JOAO VITOR DE PAULA OLIVEIRA		regi.evano@terra.com.br	
-JOAO VITOR DE PAULA OLIVEIRA		joao.oliveira334@fatec.sp.gov.br	
-JORGE FERNANDO SOARES REMETE		jorgeodestruidor@gmail.com	
-JORGE FERNANDO SOARES REMETE		jorge.remete@fatec.sp.gov.br	
-JULIA CANAVEZZI DE OLIVEIRA		julia.canavezzi69@gmail.com	
-JULIA CANAVEZZI DE OLIVEIRA		julia.oliveira70@fatec.sp.gov.br	
-MARIA EDUARDA DO CARMO BRITO		marichan1525@gmail.com	
-MARIA EDUARDA DO CARMO BRITO		maria.brito14@fatec.sp.gov.br	
-NATHAN ROSSI				robson.mestre96@gmail.com	
-NATHAN ROSSI				nathan.rossi@fatec.sp.gov.br	
-RAFAEL SCALET DE LIMA			rafaelscalet2018@gmail.com	
-RAFAEL SCALET DE LIMA			rafael.lima127@fatec.sp.gov.br	
-YUUYA OKATANI				sandubalegomatrix50@gmail.com	
-YUUYA OKATANI				yuuya.okatani@fatec.sp.gov.br	
-VINICIUS RIBEIRO			viniciuscontator@gmail.com	
-VINICIUS RIBEIRO			vinicius.ribeiro54@fatec.sp.gov.br	
-MURILO DOS SANTOS			seiiyaah10@gmail.com	
-MURILO DOS SANTOS			murilo.santos63@fatec.sp.gov.br	
-PEDRO VINICIUS SILVA			pedrovinicius090805@gmail.com	
-PEDRO VINICIUS SILVA			pedro.silva398@fatec.sp.gov.br	
-ANTONIO TADEU MAFFEIS			tadeu.maffeis@gmail.com	
+RA	Nome	e-mail
+1781432412003	ANGELO FERRAZ MODANEZ	angelo.modanez@fatec.sp.gov.br
+1781432412004	CAUÃ GRANCHELLI VALLADÃO	caua.valladao@fatec.sp.gov.br
+1781432312006	ERICK RUCKE SOUZA	erick.souza17@fatec.sp.gov.br
+1781432412005	FELIPE HENRIQUE GARCIA	felipe.garcia45@fatec.sp.gov.br
+1781432412006	GUSTAVO DA SILVA ANDRELO	gustavo.andrelo@fatec.sp.gov.br
+1781432412007	JOÃO OTÁVIO FREIRES DA SILVA	joao.silva820@fatec.sp.gov.br
+1781432412008	JOÃO VITOR DE PAULA OLIVEIRA	joao.oliveira334@fatec.sp.gov.br
+1781432412009	JORGE FERNANDO SOARES REMETE	jorge.remete@fatec.sp.gov.br
+1781432412010	JÚLIA CANAVEZZI DE OLIVEIRA	julia.oliveira70@fatec.sp.gov.br
+1781432412001	LUCAS CAMARGO DE SOUZA	lucas.souza291@fatec.sp.gov.br
+1781432412011	MARIA EDUARDA DO CARMO BRITO	maria.brito14@fatec.sp.gov.br
+1781432412016	MURILO DOS SANTOS	murilo.santos63@fatec.sp.gov.br
+1781432412012	NATHAN ROSSI	nathan.rossi@fatec.sp.gov.br
+1781432412017	PEDRO VINÍCIUS SILVA	pedro.silva398@fatec.sp.gov.br
+1781432412013	RAFAEL SCALET DE LIMA	rafael.lima127@fatec.sp.gov.br
+1781432412015	VINÍCIUS RIBEIRO	vinicius.ribeiro54@fatec.sp.gov.br
+1781432412014	YUUYA OKATANI	yuuya.okatani@fatec.sp.gov.br
