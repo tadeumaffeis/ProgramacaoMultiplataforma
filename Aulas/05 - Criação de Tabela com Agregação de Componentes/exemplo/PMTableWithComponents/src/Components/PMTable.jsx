@@ -17,7 +17,7 @@
 // 
 //
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 
@@ -108,9 +108,9 @@ export default class PMTable extends React.Component {
         console.log(caption, ' ', header, ' ', data);
         return (
             <>
-                <table onClick={this.onClick}>
+                <table onClick={this.onClick} style={{borderCollapse : 'collapse'}}>
                     <DataContext.Provider value={newState}>
-                        <PMTableCaption text={caption}/>
+                        <PMTableCaption text={caption} />
                         <PMTableHeader headers={header} />
                         <PMTableBody data={data} />
                     </DataContext.Provider >
@@ -165,6 +165,7 @@ export class PMTableBody extends React.Component {
 
     render() {
         const data = 'data' in this.state ? this.state.data : this.props.data;
+        console.log('PMTableBody: ', data);
         return (
             <tbody>
                 {
@@ -187,12 +188,25 @@ export class PMTableRow extends React.Component {
         this.state = {
             row: props.row,
         }
+        this.onMouseOut = this.onMouseOut.bind(this);
+        this.onMouseOver = this.onMouseOver.bind(this);
+    }
+
+    onMouseOver = (event) => {
+        const row = event.target.parentNode;
+        row.style.backgroundColor = 'lightgray'; 
+    }
+
+    onMouseOut = (event) => {
+        const row = event.target.parentNode;
+        row.style.backgroundColor = 'white';
     }
 
     render() {
         const row = 'row' in this.state ? this.state.row : this.props.row;
+        console.log('PMTableRow: ', row);
         return (
-            <tr>
+            <tr onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
                 {
                     row.map((cell, index) => {
                         return (
@@ -208,15 +222,38 @@ export class PMTableRow extends React.Component {
 export class PMTableCell extends React.Component {
     constructor(props) {
         super(props);
+        this.DataContext = React.createContext();
+
         this.state = {
             cell: props.cell,
         };
+        this.onDoubleClick = this.onDoubleClick.bind(this);
+        this.onEdit = this.onEdit.bind(this);
+    }
+
+    onDoubleClick = () => {
+        const cell = 'cell' in this.state ? this.state.cell : this.props.cell;
+        const editCell = (
+            <form onSubmit={this.onEdit}>
+                <input type="text" defaultValue={cell} />
+            </form>
+        );
+
+        this.setState({ cell: editCell });
+    }
+
+    onEdit = (event) => {
+        event.preventDefault();
+        const cell = event.target.firstChild.value;
+        this.setState({ cell });
     }
 
     render() {
+        const  contextType = this.DataContext;
+        console.log('PMTableCell context: ', contextType);
         const cell = 'cell' in this.state ? this.state.cell : this.props.cell;
         return (
-            <td>
+            <td onDoubleClick={this.onDoubleClick}>
                 {cell}
             </td>
         );
