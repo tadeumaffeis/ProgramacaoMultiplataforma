@@ -17,9 +17,9 @@
 // 
 //
 
-import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-
+import React from 'react';
+import './modules/main.slider.css';
 
 export default class PMTable extends React.Component {
     constructor(props) {
@@ -59,15 +59,23 @@ export default class PMTable extends React.Component {
         }
     }
 
-
     onClick = (event) => {
-        console.log(event.target.tagName, ' ', this.state);
         const column = event.target.tagName.toUpperCase() === 'TH' ? event.target.cellIndex : -1;
         if (column < 0) {
             return;
         }
 
-        const data = Array.from(this.state.data);
+        const tbodyArray = document.getElementById('tbodyMain').childNodes;
+        let dataTBody = Array(tbodyArray.length);
+        tbodyArray.forEach((row, indexRow) => {
+            dataTBody[indexRow] = Array(row.childNodes.length);
+            row.childNodes.forEach((cell, indexCol) => {
+                dataTBody[indexRow][indexCol] = cell.innerHTML;
+            });
+        });
+               
+        const data = Array.from(dataTBody);
+
         const descending = this.state.sortby === column && !this.state.descending;
 
         data.sort((a, b) => {
@@ -105,10 +113,9 @@ export default class PMTable extends React.Component {
             header: header,
             data: data,
         };
-        console.log(caption, ' ', header, ' ', data);
         return (
             <>
-                <table onClick={this.onClick} style={{borderCollapse : 'collapse'}}>
+                <table className="table" onClick={this.onClick} style={{ borderCollapse: 'collapse' }}>
                     <DataContext.Provider value={newState}>
                         <PMTableCaption text={caption} />
                         <PMTableHeader headers={header} />
@@ -141,7 +148,6 @@ export class PMTableHeader extends React.Component {
         this.state = {
             header: props.headers,
         };
-        console.log('PMTableHeader: ', this.state);
     }
     render() {
         const headers = 'header' in this.state
@@ -165,9 +171,8 @@ export class PMTableBody extends React.Component {
 
     render() {
         const data = 'data' in this.state ? this.state.data : this.props.data;
-        console.log('PMTableBody: ', data);
         return (
-            <tbody>
+            <tbody id='tbodyClass'>
                 {
                     data.map((row, index) => {
 
@@ -194,7 +199,7 @@ export class PMTableRow extends React.Component {
 
     onMouseOver = (event) => {
         const row = event.target.parentNode;
-        row.style.backgroundColor = 'lightgray'; 
+        row.style.backgroundColor = 'lightgray';
     }
 
     onMouseOut = (event) => {
@@ -204,7 +209,6 @@ export class PMTableRow extends React.Component {
 
     render() {
         const row = 'row' in this.state ? this.state.row : this.props.row;
-        console.log('PMTableRow: ', row);
         return (
             <tr onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
                 {
@@ -249,8 +253,6 @@ export class PMTableCell extends React.Component {
     }
 
     render() {
-        const  contextType = this.DataContext;
-        console.log('PMTableCell context: ', contextType);
         const cell = 'cell' in this.state ? this.state.cell : this.props.cell;
         return (
             <td onDoubleClick={this.onDoubleClick}>
@@ -264,6 +266,7 @@ PMTable.propTypes = {
     caption: PropTypes.string.isRequired,
     header: PropTypes.array,
     data: PropTypes.array,
+    children: PropTypes.object,
 };
 
 PMTable.defaultProps = {
@@ -274,6 +277,7 @@ PMTable.defaultProps = {
 
 PMTableCaption.propTypes = {
     text: PropTypes.string.isRequired,
+    listener: PropTypes.object,
 };
 
 PMTableCaption.defaultProps = {
