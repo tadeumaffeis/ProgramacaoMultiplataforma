@@ -131,7 +131,7 @@ export default class PMTable extends React.Component {
     }
 
     onDoubleClick = (event) => {
-        console.log('PMTable.onDoubleClick()', event.target.tagName.toUpperCase(), event.target.parentNode.parentNode);
+
         if (event.target.tagName.toUpperCase() === 'DIV') {
             this.setState({
                 edit: {
@@ -223,6 +223,8 @@ export default class PMTable extends React.Component {
             return row;
         });
 
+        console.log('Download: ', data);
+
         const header = Array.from(this.state.header);
 
         let csvheader = '';
@@ -235,9 +237,32 @@ export default class PMTable extends React.Component {
                 :
                 ' ';
 
+        let json = {
+            information: {
+                title: {
+                    type: "caption",
+                    text: "Horário de Aulas da Sala (Laboratório de Informática 01)"
+                },
+                colunmHeader: {
+                    type: "header",
+                    content:
+                        header.map((headercontent) => {
+                            return `"${headercontent}"`;
+                        })
+
+                },
+                reservations: {
+                    type: "array",
+                    content: [
+                        JSON.stringify(data)
+                    ]
+                }
+            }
+        };
+
         if (format === 'json') {
             // Formata como JSON
-            contents = JSON.stringify(data, null, ' ');
+            contents = json; //JSON.stringify(json, null, ' ');
         } else {
             // Formata como CSV (ou um formato similar de texto plano)
             contents += data.map(row => {
@@ -249,8 +274,10 @@ export default class PMTable extends React.Component {
             }).join('\n'); // Separa as linhas por quebra de linha
         }
 
+        console.log('Download: ', contents);
+
         const URL = window.URL || window.webkitURL;
-        const blob = new Blob([contents], { type: 'text/' + format });
+        const blob = new Blob([JSON.stringify(contents)], { type: 'text/' + format });
         ev.target.href = URL.createObjectURL(blob);
         ev.target.download = 'data.' + format;
     }
