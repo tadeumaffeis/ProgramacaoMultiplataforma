@@ -1,19 +1,19 @@
 
 import './App.css'
-import ExampleParent from './Components/HookTest';
-//import PMTableWithoutChildrenComponenets from './Components/PMTableWithoutChildrenComponents'
-//import TableInformation from './Data/reservations.array.json';
+//import ExampleParent from './Components/HookTest';
+import PMTableWithoutChildrenComponenets from './Components/PMTableWithoutChildrenComponents'
+import TableInformation from './data/table.information.json';
 
 function App() {
+  
   return (
-    /*
-      <PMTableWithoutChildrenComponenets
-        caption={TableInformation.caption}
-        header={TableInformation.header}
-        data={TableInformation.data}
-      />
-      */
-     <ExampleParent />
+    <PMTableWithoutChildrenComponenets
+      caption={TableInformation.information.title.text}
+      header={TableInformation.information.colunmHeader.content}
+      data={TableInformation.information.reservations.content}
+    />
+
+
   );
 }
 

@@ -1,9 +1,9 @@
+/*
 import React from 'react';
 
 import { PropTypes } from 'prop-types';
 
 export function ExampleHook({ layout, prelayout }) {
-    console.log(React.usetState());
     React.useLayoutEffect(() => {
         const table = document.getElementsByTagName('table')[0];
         console.log('useLayoutEffect', ' ', table.offsetWidth);
@@ -77,4 +77,4 @@ ExampleHook.propsDefault = {
     prelayout: false
 }
 
-
+*/

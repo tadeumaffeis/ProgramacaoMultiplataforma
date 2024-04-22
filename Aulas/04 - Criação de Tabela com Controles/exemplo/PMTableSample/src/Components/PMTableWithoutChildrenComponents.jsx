@@ -56,7 +56,7 @@ export default class PMTable extends React.Component {
         });
 
         const pData = props.data.map((row) => {
-            return row.map((cell) => {
+            return row.content.map((cell) => {
                 return cell;
             })
         });
@@ -77,6 +77,10 @@ export default class PMTable extends React.Component {
             },
         };
 
+        this.keyentry = 0;
+
+        console.log('PMTable.constructor()', this.state);
+
         this.onClick = this.onClick.bind(this);
         this.onDoubleClick = this.onDoubleClick.bind(this);
         this.onSaveEdit = this.onSaveEdit.bind(this);
@@ -96,9 +100,17 @@ export default class PMTable extends React.Component {
 
     onSaveEdit(event) {
         event.preventDefault();
-        const input = event.target.firstChild;
+        const input = event.target.childNodes;
+        event.target.childNodes.forEach((element) => {
+            console.log('element', element);
+        });
+        console.log(event.target.childNodes[0].value, event.target.childNodes[2].value, event.target.childNodes[4].value);
         const data = Array.from(this.state.data);
-        data[this.state.edit.row][this.state.edit.column] = input.value;
+        data[this.state.edit.row][this.state.edit.column] = {
+            discipline: input[0].value,
+            course: input[2].value,
+            professor: input[4].value,
+        };
         this.setState({
             data,
             edit: null
@@ -119,13 +131,15 @@ export default class PMTable extends React.Component {
     }
 
     onDoubleClick = (event) => {
-        if (event.target.tagName.toUpperCase() === 'TD') {
+        console.log('PMTable.onDoubleClick()', event.target.tagName.toUpperCase(), event.target.parentNode.parentNode);
+        if (event.target.tagName.toUpperCase() === 'DIV') {
             this.setState({
                 edit: {
-                    row: parseInt(event.target.parentNode.dataset.row, 10),
-                    column: event.target.cellIndex,
+                    row: parseInt(event.target.parentNode.parentNode.dataset.row, 10),
+                    column: event.target.parentNode.cellIndex,
                 }
             });
+            console.log(this.state);
         }
     }
 
@@ -260,6 +274,7 @@ export default class PMTable extends React.Component {
         }
     }
 
+
     render() {
         const caption = 'caption' in this.state ? this.state.caption : this.props.caption;
         const data = 'data' in this.state ? this.state.data : this.props.data;
@@ -297,19 +312,38 @@ export default class PMTable extends React.Component {
                                     {
                                         row.map((cell, columnidx) => {
                                             const edit = this.state.edit;
+                                            let cellcontent;
                                             if (edit && edit.row === rowidx && edit.column === columnidx) {
-                                                cell = (
+                                                cellcontent = (
                                                     <form onSubmit={this.onSaveEdit}>
-                                                        <input type="text" defaultValue={cell} />
+                                                        <input name='discipline' type="text" defaultValue={cell.discipline} /><br />
+                                                        <input name='course' type="text" defaultValue={cell.course} /><br />
+                                                        <input name='professor' type="text" defaultValue={cell.professor} /><br />
+                                                        <input type="submit" value='Save' />
                                                     </form>
                                                 )
                                             }
-                                            return <td key={columnidx}
+                                            else {
+                                                cellcontent = (
+                                                    cell.time === undefined
+                                                        ?
+                                                        <>
+                                                            <div key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.discipline }}></div>
+                                                            <div key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.course }}></div>
+                                                            <div key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.professor }}></div>
+                                                        </>
+                                                        :
+                                                        <div key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.time }}></div>
+
+                                                )
+                                            }
+                                            return (<td key={columnidx}
                                                 style={{ textAlign: 'left', paddingLeft: '0.5em', paddingRight: '0.5em' }}
                                                 onDoubleClick={this.onDoubleClick}>
-                                                {cell}
-                                            </td>
+                                                {cellcontent}
+                                            </td>);
                                         })
+
                                     }
                                 </tr>
                             );
