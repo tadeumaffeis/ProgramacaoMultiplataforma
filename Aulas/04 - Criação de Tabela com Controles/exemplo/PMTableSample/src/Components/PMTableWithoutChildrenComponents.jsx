@@ -29,6 +29,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import DownloadIcon from '@mui/icons-material/Download';
 import { red } from '@mui/material/colors';
 import Styled from 'styled-components';
+import '../Modules/module.table.css'
+
 
 const MyDiv = Styled.div`
     padding: 10px 20px;
@@ -50,15 +52,19 @@ export default class PMTable extends React.Component {
      */
     constructor(props) {
         super();
+
         const pCaption = props.caption;
         const pHeader = props.header.map((title) => {
-            return title;
+            return title.replace(/""/g, "\"");
         });
 
+        console.log('pHeader', pHeader);
+
         const pData = props.data.map((row) => {
-            return row.content.map((cell) => {
-                return cell;
-            })
+            return Array.from(row).map((cell) => {
+                return JSON.parse(cell.replace('\\"', '"').replace("\"{", "{").replace("}\"", "}"));
+                //return JSON.parse(cell.replace(/""/g, "\"").slice(1, -1).replace("\"{", "{").replace("}\"", "}"));
+            });
         });
 
         this.logState = Array.from([]);
@@ -79,8 +85,6 @@ export default class PMTable extends React.Component {
 
         this.keyentry = 0;
 
-        console.log('PMTable.constructor()', this.state);
-
         this.onClick = this.onClick.bind(this);
         this.onDoubleClick = this.onDoubleClick.bind(this);
         this.onSaveEdit = this.onSaveEdit.bind(this);
@@ -100,22 +104,58 @@ export default class PMTable extends React.Component {
 
     onSaveEdit(event) {
         event.preventDefault();
-        const input = event.target.childNodes;
-        event.target.childNodes.forEach((element) => {
-            console.log('element', element);
-        });
-        console.log(event.target.childNodes[0].value, event.target.childNodes[2].value, event.target.childNodes[4].value);
-        const data = Array.from(this.state.data);
-        data[this.state.edit.row][this.state.edit.column] = {
-            discipline: input[0].value,
-            course: input[2].value,
-            professor: input[4].value,
+        const pos = {
+            discipline: 0,
+            course: 2,
+            professor: 4,
         };
+        const input = event.target.childNodes;
+        const data = Array.from(this.state.data);
+        const nodeSelector = document.querySelectorAll('.selectedcell')
+        console.log("NodeSelector; ", nodeSelector);
+
+        nodeSelector.forEach((node) => {
+            const child = node.childNodes;
+            if (node.tagName === 'td') {
+                child.forEach((element) => {
+                    data[node.dataset.row][node.dataset.column][element.name] = input[pos[element.name]].value;
+                    console.log("::::::> ", data[node.dataset.row][node.dataset.column]);
+                });
+            }
+            //console.log("::::::> ", data[node.dataset.row][node.dataset.column]);
+        });
+
+        //child.forEach((element) => {
+        //    if (element.tagName === 'INPUT' && element.type === 'text') {
+        //        {
+        //            data[event.target.parentNode.dataset.row][event.target.parentNode.dataset.column][element.name] = element.value;
+        //            //console.log('*** element -->', element.value, element.tagName, element.name, element.type, event.target.parentNode.dataset.row, event.target.parentNode.dataset.column);
+        //        }
+        //        //console.log('*** element -->', element.value, element.tagName, element.name, element.type, event.target.parentNode.dataset.row, event.target.parentNode.dataset.column);
+        //    }
+        //    console.log('*** element -->', element.value, element.tagName, element.name, element.type, event.target.parentNode.dataset.row, event.target.parentNode.dataset.column);
+        //});
+        //console.log("Object: ",data[event.target.parentNode.dataset.row][event.target.parentNode.dataset.column]);
+        //console.log('Data:',
+        //    data[event.target.parentNode.dataset.row][event.target.parentNode.dataset.column],
+        //    event.target.parentNode.dataset.row,
+        //    event.target.parentNode.dataset.column
+        //);
+        //});
+
+
+        //data[this.state.edit.row][this.state.edit.column] = {
+        //    discipline: input[0].value,
+        //     course: input[2].value,
+        //     professor: input[4].value,
+        //};
         this.setState({
             data,
             edit: null
         });
     }
+
+
 
     onResetTable() {
         this.setState({
@@ -217,15 +257,17 @@ export default class PMTable extends React.Component {
         row.style.backgroundColor = 'white';
     }
 
+    onMouseOverCell = (event) => {
+        const cell = event.target;
+        console.log(cell);
+    }
 
     onDownloadClick = (format, ev) => {
         const data = Array.from(this.state.data).map(row => {
             return row;
         });
 
-        console.log('Download: ', data);
-
-        const header = Array.from(this.state.header);
+        const header = this.state.header;
 
         let csvheader = '';
         let contents =
@@ -247,15 +289,18 @@ export default class PMTable extends React.Component {
                     type: "header",
                     content:
                         header.map((headercontent) => {
-                            return `"${headercontent}"`;
+                            return `${headercontent}`;
                         })
 
                 },
                 reservations: {
                     type: "array",
-                    content: [
-                        JSON.stringify(data)
-                    ]
+                    content:
+                        data.map(row => {
+                            return row.map(cell => {
+                                return `"${JSON.stringify(cell)}"`;
+                            })
+                        })
                 }
             }
         };
@@ -274,12 +319,13 @@ export default class PMTable extends React.Component {
             }).join('\n'); // Separa as linhas por quebra de linha
         }
 
-        console.log('Download: ', contents);
+        console.log('Download: ', json, contents);
 
         const URL = window.URL || window.webkitURL;
         const blob = new Blob([JSON.stringify(contents)], { type: 'text/' + format });
         ev.target.href = URL.createObjectURL(blob);
         ev.target.download = 'data.' + format;
+
     }
 
     onMenuDownloadClick = (event) => {
@@ -301,6 +347,21 @@ export default class PMTable extends React.Component {
         }
     }
 
+    onClickTD = (event) => {
+        const cell = event.target.parentNode;
+        console.log('cell', cell, cell.dataset);
+        cell.dataset.selection = cell.dataset.selection === 'true' ? 'false' : 'true';
+        const child = cell.childNodes;
+        let style = '';
+
+        if (cell.dataset.selection === 'true') {
+            style = 'selectedcell';
+        }
+        else {
+            style = 'unselectedcell';
+        }
+        cell.className = style;
+    }
 
     render() {
         const caption = 'caption' in this.state ? this.state.caption : this.props.caption;
@@ -313,134 +374,139 @@ export default class PMTable extends React.Component {
         });
 
         return (
-            <table onKeyDown={this.onKeyEscPress}
-                style={{ fontFamily: 'Arial, sans-serif', borderCollapse: 'collapse', border: '1pt solid lightgray' }}>
-                <caption onClick={this.onResetTable}
-                    style={{ backgroundColor: 'lightsteelblue', fontSize: '20px', fontWeight: 'bold', color: 'blue', padding: '0.5em' }}>
-                    {caption}
-                </caption>
-                <thead onClick={this.onClick}>
-                    <tr style={{ backgroundColor: 'lightgrey' }}>
+            <>
+                <table id='mainTable' onKeyDown={this.onKeyEscPress}
+                    style={{ fontFamily: 'Arial, sans-serif', borderCollapse: 'collapse', border: '1pt solid lightgray' }}>
+                    <caption onClick={this.onResetTable}
+                        style={{ backgroundColor: 'lightsteelblue', fontSize: '20px', fontWeight: 'bold', color: 'blue', padding: '0.5em' }}>
+                        {caption}
+                    </caption>
+                    <thead onClick={this.onClick}>
+                        <tr style={{ backgroundColor: 'lightgrey' }}>
+                            {
+                                header.map((title, idx) => {
+                                    return <th key={idx} style={{ padding: '0.5em' }}>{title}</th>;
+                                })
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
                         {
-                            header.map((title, idx) => {
-                                return <th key={idx} style={{ padding: '0.5em' }}>{title}</th>;
+                            data.map((row, rowidx) => {
+                                return (
+                                    <tr key={rowidx}
+                                        data-row={rowidx}>
+                                        {
+                                            row.map((cell, columnidx) => {
+                                                const edit = this.state.edit;
+                                                let cellcontent;
+                                                if (edit && edit.row === rowidx && edit.column === columnidx) {
+                                                    cellcontent = (
+                                                        <form onSubmit={this.onSaveEdit}>
+                                                            <input name='discipline' type="text" defaultValue={cell.discipline} /><br />
+                                                            <input name='course' type="text" defaultValue={cell.course} /><br />
+                                                            <input name='professor' type="text" defaultValue={cell.professor} /><br />
+                                                            <input type="submit" value='Save' />
+                                                        </form>
+                                                    )
+                                                }
+                                                else {
+                                                    cellcontent = (
+                                                        cell.time === undefined
+                                                            ?
+                                                            <>
+                                                                <div id='discipline' key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.discipline }}></div>
+                                                                <div id='course' key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.course }}></div>
+                                                                <div id='professor' key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.professor }}></div>
+                                                            </>
+                                                            :
+                                                            <div id='time' key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.time }}></div>
+
+                                                    )
+                                                }
+                                                return (<td key={columnidx}
+                                                    style={{ textAlign: 'left', paddingLeft: '0.5em', paddingRight: '0.5em' }}
+                                                    className='unselectedcell'
+                                                    data-selection='false'
+                                                    data-row={rowidx}
+                                                    data-column={columnidx}
+                                                    onDoubleClick={this.onDoubleClick}
+                                                    onClick={e => this.onClickTD(e)}
+                                                >
+                                                    {cellcontent}
+                                                </td>);
+                                            })
+                                        }
+                                    </tr>
+                                );
                             })
                         }
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        data.map((row, rowidx) => {
-                            return (
-                                <tr key={rowidx}
-                                    data-row={rowidx}
-                                    onMouseOver={this.onMouseOverRow}
-                                    onMouseOut={this.onMouseOutRow}>
-                                    {
-                                        row.map((cell, columnidx) => {
-                                            const edit = this.state.edit;
-                                            let cellcontent;
-                                            if (edit && edit.row === rowidx && edit.column === columnidx) {
-                                                cellcontent = (
-                                                    <form onSubmit={this.onSaveEdit}>
-                                                        <input name='discipline' type="text" defaultValue={cell.discipline} /><br />
-                                                        <input name='course' type="text" defaultValue={cell.course} /><br />
-                                                        <input name='professor' type="text" defaultValue={cell.professor} /><br />
-                                                        <input type="submit" value='Save' />
-                                                    </form>
-                                                )
-                                            }
-                                            else {
-                                                cellcontent = (
-                                                    cell.time === undefined
-                                                        ?
-                                                        <>
-                                                            <div key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.discipline }}></div>
-                                                            <div key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.course }}></div>
-                                                            <div key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.professor }}></div>
-                                                        </>
-                                                        :
-                                                        <div key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.time }}></div>
+                    </tbody>
+                    <tfoot style={{ backgroundColor: 'lightsteelblue' }}>
+                        <tr>
+                            <td colSpan="7" style={{ padding: '5pt' }}>
+                                <div style={{ float: 'left', position: 'relative' }}>
+                                    <DownloadIcon
+                                        onClick={this.onMenuDownloadClick}
+                                        onMouseOver={this.onMouseOverIcon}
+                                        onMouseOut={this.onMouseOutIcon}
+                                        titleAccess='Download JSON/CSV'
 
-                                                )
-                                            }
-                                            return (<td key={columnidx}
-                                                style={{ textAlign: 'left', paddingLeft: '0.5em', paddingRight: '0.5em' }}
-                                                onDoubleClick={this.onDoubleClick}>
-                                                {cellcontent}
-                                            </td>);
-                                        })
-
-                                    }
-                                </tr>
-                            );
-                        })
-                    }
-                </tbody>
-                <tfoot style={{ backgroundColor: 'lightsteelblue' }}>
-                    <tr>
-                        <td colSpan="7" style={{ padding: '5pt' }}>
-                            <div style={{ float: 'left', position: 'relative' }}>
-                                <DownloadIcon
-                                    onClick={this.onMenuDownloadClick}
-                                    onMouseOver={this.onMouseOverIcon}
-                                    onMouseOut={this.onMouseOutIcon}
-                                    titleAccess='Download JSON/CSV'
-
-                                />
-                                <ClearIcon
-                                    onClick={this.onResetTable}
-                                    onMouseOver={this.onMouseOverIcon}
-                                    onMouseOut={this.onMouseOutIcon}
-                                    style={{ color: red[500] }}
-                                    titleAccess='Reset Table' />
-                                <SearchIcon
-                                    onClick={this.onSearchClick}
-                                    onMouseOver={this.onMouseOverIcon}
-                                    onMouseOut={this.onMouseOutIcon}
-                                    titleAccess='Search On/Off' />
-                                {
-                                    this.state.search &&
-                                    <SearchOffIcon
-                                        onClick={this.onSearchOffClick}
+                                    />
+                                    <ClearIcon
+                                        onClick={this.onResetTable}
                                         onMouseOver={this.onMouseOverIcon}
                                         onMouseOut={this.onMouseOutIcon}
                                         style={{ color: red[500] }}
-                                        titleAccess='Reset Last Search' />
-                                }
-                            </div>
-                            <div style={{ float: 'left', position: 'relative', paddingLeft: '2px' }}>
-                                {
-                                    this.state.search &&
-                                    <form onSubmit={this.onSearchSubmit}>
-                                        <input type="text" placeholder='search string' />
-                                    </form>
-                                }
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colSpan="7" style={{ backgroundColor: '#ffffff' }}>
-                            {
-                                this.state.download
-                                &&
-                                <div style={{ border: '1px solid black', fontSize: '9pt', position: 'absolute', zIndex: 2 }}>
-                                    <MyDiv style={{ display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '1px' }}>
-                                        <a href="data.json" onClick={this.onDownloadClickJSON}>
-                                            Export JSON
-                                        </a>
-                                    </MyDiv>
-                                    <MyDiv style={{ display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '1px' }}>
-                                        <a href="data.csv" onClick={this.onDownloadClickCSV}>
-                                            Export CSV
-                                        </a>
-                                    </MyDiv>
+                                        titleAccess='Reset Table' />
+                                    <SearchIcon
+                                        onClick={this.onSearchClick}
+                                        onMouseOver={this.onMouseOverIcon}
+                                        onMouseOut={this.onMouseOutIcon}
+                                        titleAccess='Search On/Off' />
+                                    {
+                                        this.state.search &&
+                                        <SearchOffIcon
+                                            onClick={this.onSearchOffClick}
+                                            onMouseOver={this.onMouseOverIcon}
+                                            onMouseOut={this.onMouseOutIcon}
+                                            style={{ color: red[500] }}
+                                            titleAccess='Reset Last Search' />
+                                    }
                                 </div>
-                            }
-                        </td>
-                    </tr>
-                </tfoot>
-            </table >
+                                <div style={{ float: 'left', position: 'relative', paddingLeft: '2px' }}>
+                                    {
+                                        this.state.search &&
+                                        <form onSubmit={this.onSearchSubmit}>
+                                            <input type="text" placeholder='search string' />
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan="7" style={{ backgroundColor: '#ffffff' }}>
+                                {
+                                    this.state.download
+                                    &&
+                                    <div style={{ border: '1px solid black', fontSize: '9pt', position: 'absolute', zIndex: 2 }}>
+                                        <MyDiv style={{ display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '1px' }}>
+                                            <a href="data.json" onClick={this.onDownloadClickJSON}>
+                                                Export JSON
+                                            </a>
+                                        </MyDiv>
+                                        <MyDiv style={{ display: 'list-item', listStyleType: 'none', textAlign: 'left', padding: '1px' }}>
+                                            <a href="data.csv" onClick={this.onDownloadClickCSV}>
+                                                Export CSV
+                                            </a>
+                                        </MyDiv>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table >
+            </>
         );
     }
 }

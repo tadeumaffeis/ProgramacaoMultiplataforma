@@ -5,7 +5,7 @@ import PMTableWithoutChildrenComponenets from './Components/PMTableWithoutChildr
 import TableInformation from './data/table.information.json';
 
 function App() {
-  
+  console.log('App',TableInformation.information);
   return (
     <PMTableWithoutChildrenComponenets
       caption={TableInformation.information.title.text}

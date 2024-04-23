@@ -1,0 +1,6 @@
+.selectedcell {
+    background: grey; 
+}´
+.unselectedcell {
+    background: rgb(255, 255, 255); 
+}
