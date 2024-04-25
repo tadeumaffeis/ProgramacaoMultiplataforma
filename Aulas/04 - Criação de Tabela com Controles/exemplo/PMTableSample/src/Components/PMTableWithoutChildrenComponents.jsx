@@ -105,26 +105,54 @@ export default class PMTable extends React.Component {
     onSaveEdit(event) {
         event.preventDefault();
         const pos = {
-            discipline: 0,
-            course: 2,
-            professor: 4,
+            discipline: 1,
+            course: 4,
+            professor: 7,
         };
+        event.target.parentNode.style.display = 'none';
         const input = event.target.childNodes;
         const data = Array.from(this.state.data);
-        const nodeSelector = document.querySelectorAll('.selectedcell')
-        console.log("NodeSelector; ", nodeSelector);
+        const selector = `[data-selection="${true}"]`;
+        const nodeSelector = document.querySelectorAll(selector);
+        console.log('::::::> ', nodeSelector);
+
+        nodeSelector.forEach((node) => {
+            if (node.tagName.toLowerCase() === 'td') {
+                console.log('::::::> Antes ', node.dataset.row, node.dataset.column, data[node.dataset.row][node.dataset.column]);
+                node.childNodes.forEach((element) => {
+                    switch (element.id) {
+                        case 'discipline':
+                            data[node.dataset.row][node.dataset.column].discipline = input[pos[element.id]].value;
+                            break;
+                        case 'course':
+                            data[node.dataset.row][node.dataset.column].course = input[pos[element.id]].value;
+                            break;
+                        case 'professor':
+                            data[node.dataset.row][node.dataset.column].professor = input[pos[element.id]].value;
+                            break;
+
+                    }
+                });
+            }
+            console.log('::::::> Depois ', node.dataset.row, node.dataset.column, data[node.dataset.row][node.dataset.column]);
+        });
+
+        /*
+        const nodeSelector = document.querySelectorAll('td.selectedcell')
+        console.log("NodeSelector; ", nodeSelector, input, pos);
 
         nodeSelector.forEach((node) => {
             const child = node.childNodes;
-            if (node.tagName === 'td') {
+            if (node.tagName.toUpperCase() === 'TD') {
                 child.forEach((element) => {
+                    console.log('=+=+=> ', element, node.dataset.row,node.dataset.column, element.name, input);
                     data[node.dataset.row][node.dataset.column][element.name] = input[pos[element.name]].value;
                     console.log("::::::> ", data[node.dataset.row][node.dataset.column]);
                 });
             }
-            //console.log("::::::> ", data[node.dataset.row][node.dataset.column]);
+            console.log("::::::> ", data[node.dataset.row][node.dataset.column]);
         });
-
+        */
         //child.forEach((element) => {
         //    if (element.tagName === 'INPUT' && element.type === 'text') {
         //        {
@@ -149,6 +177,7 @@ export default class PMTable extends React.Component {
         //     course: input[2].value,
         //     professor: input[4].value,
         //};
+        console.log('Data: ', data);
         this.setState({
             data,
             edit: null
@@ -363,6 +392,27 @@ export default class PMTable extends React.Component {
         cell.className = style;
     }
 
+    onEditCell = (e) => {
+        var contextMenu = document.getElementById('contextMenu');
+        contextMenu.style.display = 'none';
+        var prompt = document.getElementById('prompt');
+        prompt.style.display = 'block';
+    }
+
+    onLoad = () => {
+        document.addEventListener('contextmenu', function (event) {
+            event.preventDefault(); // Previne o menu de contexto padrão
+            var contextMenu = document.getElementById('contextMenu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = event.pageX + 'px';
+            contextMenu.style.top = event.pageY + 'px';
+        }, false);
+
+        document.getElementById('contextMenu').addEventListener('dblclick', function (event) {
+            document.getElementById('contextMenu').style.display = 'none';
+        }, false);
+    }
+
     render() {
         const caption = 'caption' in this.state ? this.state.caption : this.props.caption;
         const data = 'data' in this.state ? this.state.data : this.props.data;
@@ -373,8 +423,19 @@ export default class PMTable extends React.Component {
             return title;
         });
 
+        document.body.onload = this.onLoad;
+
         return (
             <>
+                <div id="contextMenu" style={{ display: 'none', position: 'absolute', zindex: '1000', backgroundColor: 'lightgray', border: '1px solid gray', padding: '10px' }}>
+                    <ul>
+                        <li onClick={this.onEditCell}><a href="#">Edit Selected Cells</a></li>
+                        <li><a href="#">Delete Selected Cells</a></li>
+                    </ul>
+                </div>
+
+                <DivPrompt id='prompt' discipline={''} course={''} professor={''} handle={this.onSaveEdit} />
+
                 <table id='mainTable' onKeyDown={this.onKeyEscPress}
                     style={{ fontFamily: 'Arial, sans-serif', borderCollapse: 'collapse', border: '1pt solid lightgray' }}>
                     <caption onClick={this.onResetTable}
@@ -401,13 +462,25 @@ export default class PMTable extends React.Component {
                                                 const edit = this.state.edit;
                                                 let cellcontent;
                                                 if (edit && edit.row === rowidx && edit.column === columnidx) {
+                                                    //cellcontent = (
+                                                    //<form onSubmit={this.onSaveEdit}>
+                                                    //    <input name='discipline' type="text" defaultValue={cell.discipline} /><br />
+                                                    //    <input name='course' type="text" defaultValue={cell.course} /><br />
+                                                    //    <input name='professor' type="text" defaultValue={cell.professor} /><br />
+                                                    //    <input type="submit" value='Save' />
+                                                    //</form>
+                                                    //)
                                                     cellcontent = (
-                                                        <form onSubmit={this.onSaveEdit}>
-                                                            <input name='discipline' type="text" defaultValue={cell.discipline} /><br />
-                                                            <input name='course' type="text" defaultValue={cell.course} /><br />
-                                                            <input name='professor' type="text" defaultValue={cell.professor} /><br />
-                                                            <input type="submit" value='Save' />
-                                                        </form>
+                                                        cell.time === undefined
+                                                            ?
+                                                            <>
+                                                                <div id='discipline' key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.discipline }}></div>
+                                                                <div id='course' key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.course }}></div>
+                                                                <div id='professor' key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.professor }}></div>
+                                                            </>
+                                                            :
+                                                            <div id='time' key={this.keyentry++} dangerouslySetInnerHTML={{ __html: cell.time }}></div>
+
                                                     )
                                                 }
                                                 else {
@@ -430,7 +503,6 @@ export default class PMTable extends React.Component {
                                                     data-selection='false'
                                                     data-row={rowidx}
                                                     data-column={columnidx}
-                                                    onDoubleClick={this.onDoubleClick}
                                                     onClick={e => this.onClickTD(e)}
                                                 >
                                                     {cellcontent}
@@ -523,97 +595,48 @@ PMTable.defaultProps = {
     data: [],
 };
 
-/*
+class DivPrompt extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = ({
+            id: props.id,
+            discipline: props.discipline,
+            course: props.course,
+            professor: props.professor,
+            handle: props.handle,
+        });
 
-    Histórico de Testes 
-    -------------------
-                    <PMTableCaption text={caption} />
-                    <PMTableHeader header={header} />
-                    <PMTableBody data={data} />
-
-        <table onClick={this.onClick}>
-                <caption>{caption}</caption>
-                <thead>
-                    <tr>
-    header.map((title, idx) => {
-                            return <th key={idx}>{title}</th>;
-    )}
-                    </tr>
-                    </thead>
-                    <tbody>
-    this.state.data.map((row, idx) => {
-                            return (
-                                <tr key={idx}>
-                row.map((cell, idx) => {
-                                        return <td key={idx}>{cell}</td>;
-                
-                                    )}
-                                </tr>
-                            );
-    
-                        )}
-                    </tbody>
-            </table>
-
-             *const html_caption = new PMTableCaption({ text: caption }).render();
-             *const html_headers = new PMTableHeader({ header: header }).render();
-             *const html_body = new PMTableBody({ data: data }).render();
-
-
-             *<table onClick={this.onClick}>
-             *    {html_caption}
-             *    {html_headers}
-             *    {html_body}
-             *</table>
-
-    deepClone(obj) {
-        if (obj === null || typeof obj !== 'object') {
-            return obj;
-        }
-
-        if (obj instanceof Array) {
-            let copy = [];
-            for (let i = 0; i < obj.length; i++) {
-                copy[i] = this.deepClone(obj[i]);
-            }
-            return copy;
-        }
-
-        if (obj instanceof Object) {
-            let copy = {};
-            for (let key in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                    copy[key] = this.deepClone(obj[key]);
-                }
-            }
-            return copy;
-        }
     }
-                                <>
-                                        <tr key={rowidx} data-row={rowidx}>
-                                            row.map((cell, columnidx) => {
-                                                const edit = this.state.edit;
-                                                if (edit && edit.row === rowidx && edit.column === columnidx) {
-                                                    cell = (
-                                                        <form onSubmit={this.onSaveEdit}>
-                                                            <input type="text" defaultValue={cell} />
-                                                        </form>
-                                                    )
-                                                }
-                                            return <td key={columnidx}>{cell}</td>;
-                                        </tr>
-                                </>
-                                                          <svg xmlns="http://www.w3.org/2000/svg"
-                                width="1.5em"
-                                height="1.5em"
-                                viewBox="0 0 24 24"
-                                onClick={this.onMenuDownloadClick}>
-                                <path fill="none"
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M12 5v8.5m0 0l3-3m-3 3l-3-3M5 15v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2">
-                                </path>
-                            </svg>
-*/
+
+    render() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const style = {
+            display: 'none',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)', // Centraliza efetivamente o elemento
+            backgroundColor: 'lightsteelblue',
+            padding: '10px',
+            border: '1px solid black',
+            borderRadius: '5px',
+            zIndex: 2,
+        };
+        return (
+            <div id={this.state.id} style={style}>
+                <form onSubmit={this.state.handle}>
+                    <label>Discipline: </label>
+                    <input type="text" defaultValue={this.state.discipline} /><br />
+                    <label>Course:     </label>
+                    <input type="text" defaultValue={this.state.course} /><br />
+                    <label>Professor:  </label>
+                    <input type="text" defaultValue={this.state.professor} /><br />
+                    <input type="submit" value='Save' />
+                </form>
+            </div>
+        );
+    }
+}
+
+
