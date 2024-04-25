@@ -2,7 +2,7 @@
 import './App.css'
 //import ExampleParent from './Components/HookTest';
 import PMTableWithoutChildrenComponenets from './Components/PMTableWithoutChildrenComponents'
-import TableInformation from './Data/table.information.json';
+import TableInformation from './data/table.information.json';
 
 function App() {
   console.log('App',TableInformation.information);

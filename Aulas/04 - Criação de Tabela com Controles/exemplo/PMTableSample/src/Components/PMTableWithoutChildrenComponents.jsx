@@ -80,6 +80,10 @@ export default class PMTable extends React.Component {
             edit: {
                 row: -1,
                 column: -1,
+                discipline: ' ',
+                course: ' ',
+                professor: ' ',
+                show: false,
             },
         };
 
@@ -100,6 +104,17 @@ export default class PMTable extends React.Component {
         this.onMouseOverRow = this.onMouseOverRow.bind(this);
         this.onKeyEscPress = this.onKeyEscPress.bind(this);
         document.addEventListener('keydown', this.onKeyEscPress);
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        console.log('Derived: ', props);
+        console.log('Derived: ', state);
+        return state;
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log('ShouldComponentUpdate: ', nextProps, nextState);
+        return true;
     }
 
     onSaveEdit(event) {
@@ -135,6 +150,11 @@ export default class PMTable extends React.Component {
                 });
             }
             console.log('::::::> Depois ', node.dataset.row, node.dataset.column, data[node.dataset.row][node.dataset.column]);
+            this.setState({
+                edit: {
+                    show: false,
+                }
+            });
         });
 
         /*
@@ -183,8 +203,6 @@ export default class PMTable extends React.Component {
             edit: null
         });
     }
-
-
 
     onResetTable() {
         this.setState({
@@ -378,10 +396,13 @@ export default class PMTable extends React.Component {
 
     onClickTD = (event) => {
         const cell = event.target.parentNode;
+        if (cell.tagName.toLowerCase() !== 'td') {
+            return;
+        }
         console.log('cell', cell, cell.dataset);
         cell.dataset.selection = cell.dataset.selection === 'true' ? 'false' : 'true';
-        const child = cell.childNodes;
         let style = '';
+
 
         if (cell.dataset.selection === 'true') {
             style = 'selectedcell';
@@ -392,15 +413,27 @@ export default class PMTable extends React.Component {
         cell.className = style;
     }
 
-    onEditCell = (e) => {
+    onEditCell = () => {
         var contextMenu = document.getElementById('contextMenu');
         contextMenu.style.display = 'none';
-        var prompt = document.getElementById('prompt');
-        prompt.style.display = 'block';
+        const selector = `[data-selection="${true}"]`;
+        const nodeSelected = document.querySelectorAll(selector);
+        console.log(nodeSelected)
+        nodeSelected.forEach((node) => {
+            this.setState({
+                edit: {
+                    discipline: node.childNodes[0].innerText,
+                    course: node.childNodes[1].textContent,
+                    professor: node.childNodes[2].textContent,
+                    show: true,
+                }
+            });
+        });
+        console.log(this.state.edit);
     }
 
     onLoad = () => {
-        document.addEventListener('contextmenu', function (event) {
+        document.addEventListener('contextmenu', function () {
             event.preventDefault(); // Previne o menu de contexto padrão
             var contextMenu = document.getElementById('contextMenu');
             contextMenu.style.display = 'block';
@@ -408,12 +441,13 @@ export default class PMTable extends React.Component {
             contextMenu.style.top = event.pageY + 'px';
         }, false);
 
-        document.getElementById('contextMenu').addEventListener('dblclick', function (event) {
+        document.getElementById('contextMenu').addEventListener('dblclick', function () {
             document.getElementById('contextMenu').style.display = 'none';
         }, false);
     }
 
     render() {
+        console.log('Render: ', this.state, this.props);
         const caption = 'caption' in this.state ? this.state.caption : this.props.caption;
         const data = 'data' in this.state ? this.state.data : this.props.data;
         const header = this.state.header.map((title, idx) => {
@@ -433,9 +467,14 @@ export default class PMTable extends React.Component {
                         <li><a href="#">Delete Selected Cells</a></li>
                     </ul>
                 </div>
-
-                <DivPrompt id='prompt' discipline={''} course={''} professor={''} handle={this.onSaveEdit} />
-
+                
+                {
+                    
+                        (this.state.edit && this.state.edit.show) ?
+                        <DivPrompt id='prompt' discipline={this.state.edit.discipline} course={this.state.edit.course} professor={this.state.edit.professor} handle={this.onSaveEdit} />
+                        :   <div />                        
+                }
+                
                 <table id='mainTable' onKeyDown={this.onKeyEscPress}
                     style={{ fontFamily: 'Arial, sans-serif', borderCollapse: 'collapse', border: '1pt solid lightgray' }}>
                     <caption onClick={this.onResetTable}
@@ -608,12 +647,29 @@ class DivPrompt extends React.Component {
 
     }
 
+    static getDerivedStateFromProps(props) {
+        return {
+            id: props.id,
+            discipline: props.discipline,
+            course: props.course,
+            professor: props.professor,
+            handle: props.handle,
+        };
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log('DivPrompt: ', nextProps, nextState);
+        return true;
+    }
+
     render() {
+        console.log('DivPrompt: ', this.state);
         const width = window.innerWidth;
         const height = window.innerHeight;
         const style = {
-            display: 'none',
+            display: 'block',
             position: 'absolute',
+            pading: '10px',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)', // Centraliza efetivamente o elemento
@@ -622,21 +678,35 @@ class DivPrompt extends React.Component {
             border: '1px solid black',
             borderRadius: '5px',
             zIndex: 2,
+            width: width / 6,
+            height: height / 4
         };
         return (
             <div id={this.state.id} style={style}>
                 <form onSubmit={this.state.handle}>
-                    <label>Discipline: </label>
+                    <label id='labelDiscipline'>Discipline </label>
                     <input type="text" defaultValue={this.state.discipline} /><br />
-                    <label>Course:     </label>
+                    <label id='labelCourse'>Course     </label>
                     <input type="text" defaultValue={this.state.course} /><br />
-                    <label>Professor:  </label>
+                    <label id='labelProfessor'>Professor  </label>
                     <input type="text" defaultValue={this.state.professor} /><br />
                     <input type="submit" value='Save' />
+                    <input type="button" value='Cancel'
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.target.parentNode.parentNode.style.display = 'none';
+                        }
+                        } />
                 </form>
             </div>
         );
     }
 }
 
-
+DivPrompt.propTypes = {
+    id: PropTypes.string,
+    discipline: PropTypes.string,
+    course: PropTypes.string,
+    professor: PropTypes.string,
+    handle: PropTypes.func,
+};
