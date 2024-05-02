@@ -10,7 +10,6 @@ function App() {
     return (
         <PMTableWithoutChildrenComponenets
             caption={TableInformation.information.title.text}
-            header={TableInformation.information.colunmHeader.content}
             data={TableInformation.information.reservations.content}
         />
 
