@@ -1,26 +1,34 @@
 
-import './App.css'
+//import './App.css'
 //import ExampleParent from './Components/HookTest';
+import BasicTable from './Components/MUITable';
 import PMTableWithoutChildrenComponenets from './Components/PMTableWithoutChildrenComponents'
 import TableInformation from './data/table.information.json';
 
 function App() {
-  console.log('App',TableInformation.information);
-  return (
-    <PMTableWithoutChildrenComponenets
-      caption={TableInformation.information.title.text}
-      header={TableInformation.information.colunmHeader.content}
-      data={TableInformation.information.reservations.content}
-    />
+    console.log('App', TableInformation.information);
+    return (
+        <PMTableWithoutChildrenComponenets
+            caption={TableInformation.information.title.text}
+            header={TableInformation.information.colunmHeader.content}
+            data={TableInformation.information.reservations.content}
+        />
 
-
-  );
+    );
 }
 
 export default App
 
 /*
 
+    <BasicTable />
+    {/*
+    <PMTableWithoutChildrenComponenets
+      caption={TableInformation.information.title.text}
+      header={TableInformation.information.colunmHeader.content}
+      data={TableInformation.information.reservations.content}
+    />
+    
     Histórico de Testes 
     -------------------
                     <PMTableCaption text={caption} />

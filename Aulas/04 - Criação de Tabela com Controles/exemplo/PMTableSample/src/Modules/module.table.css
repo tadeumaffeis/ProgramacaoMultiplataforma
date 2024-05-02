@@ -6,6 +6,10 @@
     background: rgb(255, 255, 255); 
 }
 
+.bordered {
+    border-bottom: 1px solid black;
+}
+
 #labelDiscipline, #labelCourse, #labelProfessor {
     font-size: 12pt;
     font-weight: bold;
@@ -44,4 +48,43 @@ input[type="button"], input[type="submit"] {
 
 #contextMenu ul li a:hover {
     background-color: #f1f1f1;
+}
+
+#discipline #course #professor {
+    display: flex;
+    justify-content: center; /* Alinha horizontalmente ao centro */
+    align-items: center;     /* Alinha verticalmente ao centro */
+    height: 200px;           /* Define a altura da div */
+    width: 200px;            /* Define a largura da div */
+    text-align: center; 
+    box-sizing: border-box;
+    font-weight: bolder;
+    font-size: medium;
+}
+
+#course 
+{
+    font-size: small;
+    
+}
+
+#professor {
+    font-size: smaller;
+    font-weight: lighter;
+}
+
+#root {
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 80%;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 1%;
+    padding-bottom: 5%;
+}
+
+#tableCell {
+    text-align: center;
+    
 }

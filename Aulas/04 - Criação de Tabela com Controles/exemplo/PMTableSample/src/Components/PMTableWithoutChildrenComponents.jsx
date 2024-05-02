@@ -477,7 +477,7 @@ export default class PMTable extends React.Component {
                 
                 <table id='mainTable' onKeyDown={this.onKeyEscPress}
                     style={{ fontFamily: 'Arial, sans-serif', borderCollapse: 'collapse', border: '1pt solid lightgray' }}>
-                    <caption onClick={this.onResetTable}
+                    <caption
                         style={{ backgroundColor: 'lightsteelblue', fontSize: '20px', fontWeight: 'bold', color: 'blue', padding: '0.5em' }}>
                         {caption}
                     </caption>
@@ -495,20 +495,12 @@ export default class PMTable extends React.Component {
                             data.map((row, rowidx) => {
                                 return (
                                     <tr key={rowidx}
-                                        data-row={rowidx}>
+                                        data-row={rowidx} className='bordered'>
                                         {
                                             row.map((cell, columnidx) => {
                                                 const edit = this.state.edit;
                                                 let cellcontent;
                                                 if (edit && edit.row === rowidx && edit.column === columnidx) {
-                                                    //cellcontent = (
-                                                    //<form onSubmit={this.onSaveEdit}>
-                                                    //    <input name='discipline' type="text" defaultValue={cell.discipline} /><br />
-                                                    //    <input name='course' type="text" defaultValue={cell.course} /><br />
-                                                    //    <input name='professor' type="text" defaultValue={cell.professor} /><br />
-                                                    //    <input type="submit" value='Save' />
-                                                    //</form>
-                                                    //)
                                                     cellcontent = (
                                                         cell.time === undefined
                                                             ?
@@ -537,7 +529,7 @@ export default class PMTable extends React.Component {
                                                     )
                                                 }
                                                 return (<td key={columnidx}
-                                                    style={{ textAlign: 'left', paddingLeft: '0.5em', paddingRight: '0.5em' }}
+                                                    id='tableCell'
                                                     className='unselectedcell'
                                                     data-selection='false'
                                                     data-row={rowidx}
