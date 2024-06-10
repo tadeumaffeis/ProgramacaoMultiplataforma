@@ -1,3 +1,4 @@
+/*
 require('dotenv').config();
 const mongoose = require('mongoose');
 
@@ -27,7 +28,8 @@ newUser.save()
   .catch(err => console.error('Erro ao criar NewUser usuário:', err));
 
 
-/*
+*/
+
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -50,4 +52,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
-*/
