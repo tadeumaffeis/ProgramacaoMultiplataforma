@@ -61,11 +61,17 @@ export default class PMTable extends React.Component {
         console.log('pHeader', pHeader);
 
         const pData = props.data.map((row) => {
-            return Array.from(row).map((cell) => {
-                return JSON.parse(cell.replace('\\"', '"').replace("\"{", "{").replace("}\"", "}"));
+            console.log('Row', row);
+            return Array.from(row.content).map((cell) => {
+                console.log('Cell', cell);
+                return (cell);
+                //return JSON.parse(cell.replace('\\"', '"').replace("\"{", "{").replace("}\"", "}"));
                 //return JSON.parse(cell.replace(/""/g, "\"").slice(1, -1).replace("\"{", "{").replace("}\"", "}"));
             });
         });
+
+        console.log('Data', props.data);
+        console.log('pData',pData);
 
         this.logState = Array.from([]);
 
@@ -458,6 +464,8 @@ export default class PMTable extends React.Component {
         });
 
         document.body.onload = this.onLoad;
+
+        console.log('Tudo aqui: ', this.state);
 
         return (
             <>
